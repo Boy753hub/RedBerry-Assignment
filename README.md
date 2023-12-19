@@ -1,2 +1,2 @@
-# RedBerry Bootcamp Assignments
+# RedBerry Bootcamp Assignment
 blog website
