@@ -39,8 +39,8 @@
 .scrollContainer{
     overflow-x: auto;
     white-space: nowrap;
-    padding-top: 2rem;
-    padding-bottom: 5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     width: 60%; 
     display: flex; 
     gap: 24px; 
