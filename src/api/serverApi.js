@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 
 export const BASE_PATH = "https://api.blog.redberryinternship.ge/api"
@@ -19,3 +20,15 @@ export const getCategories = async () => {
         throw error;
     }
 }
+export const login = async (email) => {
+    try {
+      const response = await API.post("/login", {
+        "email": email
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error during login:", error);
+      throw error;
+    }
+  };
+  
