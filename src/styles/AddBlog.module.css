@@ -1,0 +1,188 @@
+.AddBlog{
+    display: flex;
+    margin: 2rem;
+    font-family: 'FiraGO', sans-serif;
+
+}
+.AddBlog p {
+    margin-bottom: 10px;
+}
+.backButton{
+    margin: 1rem;
+}
+.backButton img{
+    cursor: pointer;
+}
+.content{
+    display: flex;
+    justify-content: flex-start;
+    width: 90%;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+
+
+}
+.addBlogContent{ 
+    width: 600px;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+}
+.addBlogContent h1{
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1A1A1F;
+    margin-bottom: 3rem;
+}
+.addPhoto{
+    width: 100%;
+    background-color: #F4F3FF;
+    border: 1px dashed  #85858D;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 12px;
+    margin-top: 7px;       
+    gap: 1rem;                                                                               
+}
+.photoP{
+    display: flex ;
+    gap: 5px
+}
+.uploadedImg{
+    display: flex;
+    width: 100%;
+    height: 56px;
+    align-items: center;
+    background-color: #F2F2FA;
+    margin-top: 10px;
+}
+.folderName{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+}
+.uploadedImgRemove{
+    margin-right: 10px;
+}
+.inputHub{
+    display: flex;
+    width: 100%;
+    margin-top: 30px;
+    gap: 2rem;
+}
+.author{
+    margin-left: 0px;
+    width: 100%;
+}
+.author input{
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #E4E3EB;
+    padding-left: 10px;
+}
+.authorErr {
+    font-size: small;
+    margin-top: 10px;
+}
+.bulletPoint {
+    margin-right: 5px; 
+    font-size: 1.2em; 
+    vertical-align: middle; 
+  }
+.title{
+    margin-left: 0px;
+    width: 100%;
+    
+}
+.title input{
+    width: 100%;
+    margin: 0;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #E4E3EB;
+    padding-left: 10px;
+}
+.Description p {
+    margin-top: 30px;
+}
+.Description input{
+    margin-left: 0px;
+    width: 100%;
+    height: 124px;
+    border-radius: 12px;
+    border: 1px solid #E4E3EB;
+    padding-left: 10px;
+}
+.uploadDate{
+    margin-left: 0px;
+    width: 100%;
+}
+.uploadDate input{
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #E4E3EB;
+    padding-left: 10px;
+}
+.categories{
+    margin-left: 0px;
+    width: 100%;
+}
+.categories input {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #E4E3EB;
+    padding-top: 10px; /* Add padding to move text away from the top */
+    padding-bottom: 10px; /* Add padding to move text away from the bottom */
+    text-align: left;
+}
+.emailContainer{
+    display: flex;
+    width: 100%;
+    margin-top: 30px;
+    gap: 2rem;
+
+}
+.email{
+    margin-left: 0px;
+    width: 100%;
+}
+.email input{
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #E4E3EB;
+    padding-left: 10px;
+}
+.submit{
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 30px;
+}
+.emptyspace{
+    width: 100%;
+
+}
+.submit button{
+    width: 100%;
+    padding-right: 0px;
+    height: 44px;
+    background-color: #365DF0;
+    border-radius: 8px;
+    border: none;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+}

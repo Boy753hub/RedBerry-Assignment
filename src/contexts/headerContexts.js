@@ -6,6 +6,7 @@ const HeaderContexts = createContext(null)
 const HeaderContextProvider = ({children}) => {
     const [isUser = true, setUser] = useSessionStorage("user", false);
     
+    
     const contextValue = useMemo(()=> ({
         isUser,
         setUser
