@@ -60,6 +60,8 @@ const AddBlogPage = () => {
         console.log(categoriesValue)
         console.log(emailValue)
 
+      }else{
+        console.log("error")
       }
       
 
