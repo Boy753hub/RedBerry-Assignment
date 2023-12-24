@@ -8,6 +8,9 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { getCategories } from '../api/serverApi'
 import Categories from '../components/Categories'
+import Select from "react-select";
+import {Card, Form} from "react-bootstrap";
+import info_circle from '../assets/info-circle.png'
 
 
 const AddBlogPage = () => {
@@ -25,6 +28,7 @@ const AddBlogPage = () => {
     queryKey: ['categories'],
     queryFn: getCategories,
   });
+  console.log(data)
 
   const goBackF = () => {
     navigate('/');
@@ -64,24 +68,56 @@ const AddBlogPage = () => {
     return georgianAlphabetRegex.test(value);
   };
   
+  const validTitleValue = (e) => {
+    const value = e.target.value;
+    setTitleValue(value);
+    let newErrors = {};
+    if (value.length < 4) {
+      newErrors.TitlefourSymbol = "მინიმუმ 4 სიმბოლო";
+    } 
+    setErrors(newErrors);
+
+  }
+  const handleDescriptionChange = (e) => {
+    const value = e.target.value;
+    setDescValue(value);
+    let newErrors = {};
+    if (value.length < 4) {
+      newErrors.DescfourSymbol = "მინიმუმ 4 სიმბოლო";
+    } 
+    setErrors(newErrors);
+  }
+
+  const handleDataChange = (e) => {
+    let value = e.target.value;
+    setDateValue(value);
+    console.log("date", value)
+  }
 
   const ValidateAuthorValue = (e) => {
     const value = e.target.value;
     setAuthorValue(value);
     let newErrors = {};
-    
     if (value.split(' ').length < 2) {
-      newErrors.twoWord = "მინიმუმ ორი სიტყვა";
+      newErrors.AuthortwoWord = "მინიმუმ ორი სიტყვა";
     } 
     if (value.length < 4) {
-      newErrors.fourSymbol = "მინიმუმ 4 სიმბოლო";
+      newErrors.AuthorfourSymbol = "მინიმუმ 4 სიმბოლო";
     } 
     if (!isGeorgianAlphabet(value)) {
-      newErrors.georgian = "მხოლოდ ქართული სიმბოლოები";
+      newErrors.Authorgeorgian = "მხოლოდ ქართული სიმბოლოები";
     } 
     setErrors(newErrors);
   }
  
+  const selectAnswer = (e) => {
+    const value = e.value;
+    setSetCategoriesValue(value);
+  }
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmailValue(value);
+  }
 
 
   return (
@@ -94,7 +130,7 @@ const AddBlogPage = () => {
           <form onSubmit={onSubmit}>
             <h1>ბლოგის დამატება</h1>
             <div className={styles.photoUpload}>
-              <p>ატვირთეთ ფოტო </p>
+              <p>ატვირთეთ ფოტო *</p>
               {!file ? (
                 <div
                   onDrop={handleDrop}
@@ -135,53 +171,87 @@ const AddBlogPage = () => {
                   type="text"
                   value={authorValue}
                   onChange={ValidateAuthorValue}
+                  placeholder='შეიყვანეთ ავტორი'
+                  style={{ border: (!errors.AuthortwoWord && authorValue.length >= 4 && isGeorgianAlphabet(authorValue)) ? '#14D81C solid 1px' : '#E4E3EB solid 1px'}}
                 />
-                 <p className={styles.authorErr} style={{ color: errors.twoWord ? 'gray' :  'green'  }}>
-                  <span className={styles.bulletPoint}>&bull;</span>
-                  {errors.twoWord || 'მინიმუმ ორი სიტყვა'}
-                </p>
-                <p className={styles.authorErr} style={{ color: errors.fourSymbol ? 'gray' : 'green'  }}>
-                  <span className={styles.bulletPoint}>&bull;</span>
-                  {errors.fourSymbol || 'მინიმუმ 4 სიმბოლო'}
-                </p>
-                <p className={styles.authorErr} style={{ color: errors.georgian ? 'gray' : 'green' }}>
-                  <span className={styles.bulletPoint}>&bull;</span>
-                  {errors.georgian || 'მხოლოდ ქართული სიმბოლოები'}
-                </p>
+              <p className={styles.authorErr} style={{ color: errors.AuthortwoWord ? '#85858D' : ((authorValue.split(' ').length >= 2)? '#14D81C' : '#85858D') }}>
+                <span className={styles.bulletPoint}>&bull;</span>
+                მინიმუმ ორი სიტყვა
+              </p>
+              <p className={styles.authorErr} style={{ color: errors.AuthorfourSymbol ? '#85858D' : (authorValue.length >= 4 ? '#14D81C' : '#85858D') }}>
+                <span className={styles.bulletPoint}>&bull;</span>
+                მინიმუმ 4 სიმბოლო
+              </p>
+              <p className={styles.authorErr} style={{ color: errors.Authorgeorgian ? '#85858D' : (isGeorgianAlphabet(authorValue) ? '#14D81C' : '#85858D') }}>
+                <span className={styles.bulletPoint}>&bull;</span>
+                მხოლოდ ქართული სიმბოლოები
+              </p>
               </div>
               <div className={styles.title}>
                 <p>სათაური *</p>
-                <input type="text" />
+                <input 
+                type="text" 
+                value={titleValue}
+                placeholder='შეიყვანეთ სათაური'
+                onChange={validTitleValue}
+                style={{ border: ( titleValue.length >= 4 ) ? '#14D81C solid 1px' : '#E4E3EB solid 1px'}}
+                />
+                <p className={styles.authorErr} style={{ color: errors.TitlefourSymbol ? '#85858D' : (titleValue.length >= 4 ? '#14D81C' : '#85858D') }}>
+                <span className={styles.bulletPoint}></span>
+                მინიმუმ 4 სიმბოლო
+              </p>
               </div>
             </div>
               <div className={styles.Description}>
                 <p>Description *</p>
-                <input type="text" />
+                <textarea
+                rows="4" 
+                value={descValue}
+                placeholder='შეიყვანეთ აღწერა' 
+                onChange={handleDescriptionChange}
+                style={{ resize: 'none', border: (!errors.DescfourSymbol && descValue.length >= 4) ? '#14D81C solid 1px' : '#E4E3EB solid 1px' }} 
+              />
+              <p className={styles.authorErr} style={{ color: errors.DescfourSymbol ? '#85858D' : (descValue.length >= 4 ? '#14D81C' : '#85858D') , marginTop: '10px'}}>
+                <span className={styles.bulletPoint}></span>
+                მინიმუმ 4 სიმბოლო
+              </p>
               </div>
               <div className={styles.inputHub}>
                   <div className={styles.uploadDate}>
                     <p>გამოქვეყნების თარიღი *</p>
-                    <input type="date" />
+                    <input type="date" 
+                      selected={dateValue}
+                      onChange={handleDataChange}
+                    />
                   </div>
                   <div className={styles.categories}>
                     <p>კატეგორია *</p>
-                    <select name="categories" id="categories">
-                      {data && data.data.map((category) => (
-                        <Categories
-                        key={category.id}
-                        title={category.title}
-                        text_color={category.text_color}
-                        background_color={category.background_color}
-                        />
-                        ))}
-                    </select>
+                    {data && <Select 
+                      options={data.data.map((e) => ({
+                        value: e.title,
+                        label: e.title
+                      }))}
+                      isMulti
+                      name="colors"
+                      className={styles.multi_select_cat}
+                      classNamePrefix="select"
+                      placeholder="აირჩიეთ კატეგორია"
+                      onChange={selectAnswer}
+                    />} 
                   </div>
               </div>
               <div className={ styles.emailContainer}>
-              <div className={styles.email}>
-                  <p>ელ–ფოსტა *</p>
-                  <input type="email" />
-              </div>
+                <div className={styles.email}>
+                  <p>ელ–ფოსტა</p>
+                  <input
+                    type="email"
+                    placeholder="Example@redberry.ge"
+                    value={emailValue}
+                    onChange={handleEmailChange}
+                    style={{ border: error ? '1px solid red' : '2px solid #E4E3EB;'}}
+                    />
+                  {error && <div className={styles.info}> <img src={info_circle} alt="!"  /><p className={styles.error}> {error}</p></div> }
+                </div>
                   <div className={styles.emptyspace}></div>
 
               </div>

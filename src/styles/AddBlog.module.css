@@ -9,9 +9,13 @@
 }
 .backButton{
     margin: 1rem;
+    position: fixed;
 }
 .backButton img{
+    position: fixed;
+    height: min-content;
     cursor: pointer;
+    
 }
 .content{
     display: flex;
@@ -82,16 +86,23 @@
     margin-left: 0px;
     width: 100%;
 }
-.author input{
+.author input {
     width: 100%;
     height: 44px;
     border-radius: 12px;
     border: 1px solid #E4E3EB;
     padding-left: 10px;
-}
+    transition: border-color 0.3s ease; 
+  }
+  
+  .author input:focus {
+    border-color: #5D37F3;
+    outline: none;
+  }
 .authorErr {
     font-size: small;
     margin-top: 10px;
+    color: gray;
 }
 .bulletPoint {
     margin-right: 5px; 
@@ -111,17 +122,27 @@
     border: 1px solid #E4E3EB;
     padding-left: 10px;
 }
+.title input:focus {
+    border-color: #5D37F3;
+    outline: none;
+  }
 .Description p {
     margin-top: 30px;
-}
-.Description input{
+  }
+  
+  .Description textarea {
     margin-left: 0px;
     width: 100%;
-    height: 124px;
+    height: 124px; 
     border-radius: 12px;
     border: 1px solid #E4E3EB;
-    padding-left: 10px;
-}
+    padding: 10px;
+    resize: none;  
+  }
+  .Description textarea:focus {
+    border-color: #5D37F3;
+    outline: none;
+  }
 .uploadDate{
     margin-left: 0px;
     width: 100%;
@@ -133,6 +154,11 @@
     border: 1px solid #E4E3EB;
     padding-left: 10px;
 }
+.uploadDate input:focus {
+    border-color: #5D37F3;
+    outline: none;
+  }
+
 .categories{
     margin-left: 0px;
     width: 100%;
@@ -142,10 +168,14 @@
     height: 44px;
     border-radius: 12px;
     border: 1px solid #E4E3EB;
-    padding-top: 10px; /* Add padding to move text away from the top */
-    padding-bottom: 10px; /* Add padding to move text away from the bottom */
+    padding-top: 10px; 
+    padding-bottom: 10px; 
     text-align: left;
 }
+.categories input:focus {
+    border-color: #5D37F3;
+    outline: none;
+  }
 .emailContainer{
     display: flex;
     width: 100%;
@@ -157,13 +187,19 @@
     margin-left: 0px;
     width: 100%;
 }
+
 .email input{
     width: 100%;
-    height: 44px;
+    height: 45px;
     border-radius: 12px;
-    border: 1px solid #E4E3EB;
     padding-left: 10px;
+    outline: none;
+    border: 1px solid #E4E3EB;
 }
+.email input:focus {
+    border-color: #5D37F3;
+    outline: none;
+  }
 .submit{
     display: flex;
     justify-content: space-between;
@@ -185,4 +221,10 @@
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
+}
+.multi_select_cat{
+    display: flex;
+    gap: 1rem;
+    margin-top: 30px;
+    width: 50px;
 }
