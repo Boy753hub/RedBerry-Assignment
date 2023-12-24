@@ -32,3 +32,11 @@ export const login = async (email) => {
     }
   };
   
+export const AddBlog = async (blog) => {
+  try {
+    return (await API.post("/blogs", blog)).data
+  } catch (error) {
+    console.error("Error adding blog:", error);
+    throw error;
+  }
+}

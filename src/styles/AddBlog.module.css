@@ -9,10 +9,8 @@
 }
 .backButton{
     margin: 1rem;
-    position: fixed;
 }
 .backButton img{
-    position: fixed;
     height: min-content;
     cursor: pointer;
     
@@ -121,6 +119,7 @@
     border-radius: 12px;
     border: 1px solid #E4E3EB;
     padding-left: 10px;
+    transition: border-color 0.3s ease; 
 }
 .title input:focus {
     border-color: #5D37F3;
@@ -227,4 +226,14 @@
     gap: 1rem;
     margin-top: 30px;
     width: 50px;
+}
+.info{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+.error {
+    font-weight: 100;
+    font-size: small;
 }
