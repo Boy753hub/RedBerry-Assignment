@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/AddBlog.module.css";
 import goBack from "../assets/Arrow.png";
 import folderAdd from "../assets/folder-add.png";
@@ -6,9 +6,12 @@ import gallery from "../assets/gallery.png";
 import X from "../assets/X.png";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getCategories } from "../api/serverApi";
+import { AddBlog, getCategories } from "../api/serverApi";
 import Select from "react-select";
 import info_circle from "../assets/info-circle.png";
+import Modal from "../components/Modal";
+import { debounce } from 'lodash';
+
 
 const AddBlogPage = () => {
   const [authorValue, setAuthorValue] = useState("");
@@ -17,7 +20,14 @@ const AddBlogPage = () => {
   const [dateValue, setDateValue] = useState("");
   const [categoriesValue, setSetCategoriesValue] = useState("");
   const [emailValue, setEmailValue] = useState("");
-  const [errors, setErrors] = useState({});
+  const [Aerrors, AsetErrors] = useState({});
+  const [Terrors, TsetErrors] = useState({});
+  const [Derrors, DsetErrors] = useState({});
+  const [Dateerrors, DatesetErrors] = useState({});
+  const [Cerrors, CsetErrors] = useState({});
+  const [Eerrors, EsetErrors] = useState({});
+  const [submited, setSubmited] = useState(false)
+  const [submitErros, setSubmitErros] = useState(false)
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const fileInputRef = React.createRef();
@@ -26,47 +36,169 @@ const AddBlogPage = () => {
     queryFn: getCategories,
   });
 
+  const sessionStorageKeys = [
+    'authorValue',
+    'titleValue',
+    'descValue',
+    'dateValue',
+    'categoriesValue',
+    'emailValue',
+  ];
+  useEffect(() => {
+    sessionStorageKeys.forEach((key) => {
+      const storedValue = sessionStorage.getItem(key);
+
+      if (storedValue) {
+        // Parse the stored JSON value and update the corresponding state
+        const parsedValue = JSON.parse(storedValue);
+
+        // Update state based on the key
+        switch (key) {
+          case 'authorValue':
+            setAuthorValue(parsedValue);
+            break;
+          case 'titleValue':
+            setTitleValue(parsedValue);
+            break;
+            
+          case 'descValue':
+            setDescValue(parsedValue);
+            break;
+            
+          case 'categoriesValue':
+            setSetCategoriesValue(parsedValue);
+            break;
+            
+          case 'dateValue':
+            setDateValue(parsedValue);
+            break;
+            
+          case 'emailValue':
+            setEmailValue(parsedValue);
+            break;
+
+          default:
+            break;
+        }
+      }
+    });
+  }, []);
+
+  const updateSessionStorageDebounced = debounce(() => {
+    sessionStorageKeys.forEach((key) => {
+      const value = eval(key);
+      sessionStorage.setItem(key, JSON.stringify(value));
+    });
+  }, 500); 
+  
+  useEffect(() => {
+    updateSessionStorageDebounced();
+  }, [authorValue, titleValue, descValue, dateValue, categoriesValue, emailValue]);
+  
   const goBackF = () => {
     navigate("/");
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async(event) => {
     event.preventDefault();
-    console.log(
-      authorValue,
-      dateValue,
-      titleValue,
-      descValue,
-      categoriesValue,
-      emailValue
-    );
-    let newErrors = {};
-    if(emailValue){
-
-      if (!emailValue.endsWith("@redberry.ge")) {
-        newErrors.EmailErr = "მეილი უნდა მთავრდებოდეს @redberry.ge–ით";
+   
+      let newErrors = {};
+      if(emailValue){
+        
+        if (!emailValue.endsWith("@redberry.ge")) {
+          newErrors.EmailErr = "მეილი უნდა მთავრდებოდეს @redberry.ge–ით";
       }
-      setErrors(newErrors);
+      EsetErrors(newErrors);
     }
-    if(file, authorValue,
-      dateValue,
-      titleValue,
-      descValue,
-      categoriesValue){
-        console.log(authorValue)
-        console.log(file)
-        console.log(titleValue)
-        console.log(descValue)
-        console.log(categoriesValue)
-        console.log(emailValue)
+    
+    if(file && authorValue && dateValue && titleValue && descValue && categoriesValue ){
+      console.log('submited')
+      const data = JSON.stringify({...file})
+      console.log(data)
+      
 
-      }else{
-        console.log("error")
+
+      console.log(categoriesValue.toString())
+      const formData = new FormData()
+      formData.append('image', file)
+      formData.append('title', titleValue)
+      formData.append('description', descValue)
+      formData.append('author', authorValue)
+      formData.append('publish_date', dateValue)
+      formData.append('categories', JSON.stringify(categoriesValue))
+      formData.append('email', emailValue ? emailValue : '')
+      console.log(formData)
+      try {
+        setSubmitErros(false)
+        const res =  await AddBlog(formData)
+        if(res.success){
+          setSubmited(true)
+          sessionStorage.clear()
+        }
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+      
+    }else{
+      setSubmitErros(true)
       }
       
 
     };
 
+
+    const customStyles = {
+      control: (provided, state) => {
+        const border = state.isSelected ? '1px solid #4CAF50' : '1px solid #ccc';
+        const errorBorder = submitErros && !categoriesValue ? '1px solid red' : border;
+    
+        return {
+          ...provided,
+          border: errorBorder,
+          boxShadow: 'none',
+          borderRadius: '8px',
+          width: '100%',
+          display: 'flex',
+        };
+      },
+      option: (provided, state) => ({
+        ...provided,
+        borderRadius: '8px',
+        backgroundColor: state.data.style.backgroundColor,
+        color: state.data.style.color,
+        display: 'flex',
+        flexDirection: 'row',
+        overflow: 'hidden',
+        flexWrap: 'nowrap',
+        overflowX: 'auto',
+      }),
+      multiValue: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.data.style.backgroundColor,
+        color: state.data.style.color,
+        borderRadius: '8px',
+        height: '33px',
+        display: 'flex',
+        alignItems: 'center',
+      }),
+      menu: (provided) => ({
+        ...provided,
+        display: 'flex',
+        flexDirection: 'row',
+        maxHeight: '150px',
+        overflowY: 'auto',
+        width: '100%',
+      }),
+      menuValue: (provided) => ({
+        ...provided,
+        display: 'flex',
+        flexDirection: 'row',
+        maxHeight: '200px',
+        overflowY: 'auto',
+        width: 'auto',
+      }),
+    };
   const handleDrop = (event) => {
     event.preventDefault();
     const droppedFiles = Array.from(event.dataTransfer.files);
@@ -100,7 +232,7 @@ const AddBlogPage = () => {
     if (value.length < 4) {
       newErrors.TitlefourSymbol = "მინიმუმ 4 სიმბოლო";
     }
-    setErrors(newErrors);
+    TsetErrors(newErrors);
   };
   const handleDescriptionChange = (e) => {
     const value = e.target.value;
@@ -109,13 +241,12 @@ const AddBlogPage = () => {
     if (value.length < 4) {
       newErrors.DescfourSymbol = "მინიმუმ 4 სიმბოლო";
     }
-    setErrors(newErrors);
+    DsetErrors(newErrors);
   };
 
   const handleDataChange = (e) => {
     let value = e.target.value;
     setDateValue(value);
-    console.log("date", value);
   };
 
   const ValidateAuthorValue = (e) => {
@@ -131,12 +262,12 @@ const AddBlogPage = () => {
     if (!isGeorgianAlphabet(value)) {
       newErrors.Authorgeorgian = "მხოლოდ ქართული სიმბოლოები";
     }
-    setErrors(newErrors);
+    AsetErrors(newErrors);
   };
 
   const selectAnswer = (e) => {
     const value = e.value;
-    const selectedStrings = e.map((option) => option.value);
+    const selectedStrings = e.map((option) => option.id);
     setSetCategoriesValue(selectedStrings);
   };
 
@@ -144,7 +275,7 @@ const AddBlogPage = () => {
     const value = e.target.value;
     setEmailValue(value);
     const newError = {}
-    setErrors(newError)
+    EsetErrors(newError)
   };
 
   return (
@@ -166,7 +297,7 @@ const AddBlogPage = () => {
                 <div
                   onDrop={handleDrop}
                   onDragOver={(event) => event.preventDefault()}
-                  className={styles.addPhoto}
+                  className={`${styles.addPhoto} ${submitErros ? styles.errorBorder : ''}`}
                 >
                   <div className={styles.folder}>
                     <img src={folderAdd} alt="" />
@@ -215,17 +346,19 @@ const AddBlogPage = () => {
                   placeholder="შეიყვანეთ ავტორი"
                   style={{
                     border:
-                      !errors.AuthortwoWord &&
+                      (!Aerrors.AuthortwoWord &&
                       authorValue.length >= 4 &&
                       isGeorgianAlphabet(authorValue)
-                        ? "#14D81C solid 1px"
-                        : "#E4E3EB solid 1px",
+                        ? "#14D81C"
+                        : submitErros || (authorValue && !authorValue)
+                        ? "red"
+                        : "#E4E3EB") + " solid 1px",
                   }}
                 />
                 <p
                   className={styles.authorErr}
                   style={{
-                    color: errors.AuthortwoWord
+                    color: Aerrors.AuthortwoWord
                       ? "#85858D"
                       : authorValue.split(" ").length >= 2
                       ? "#14D81C"
@@ -238,7 +371,7 @@ const AddBlogPage = () => {
                 <p
                   className={styles.authorErr}
                   style={{
-                    color: errors.AuthorfourSymbol
+                    color: Aerrors.AuthorfourSymbol
                       ? "#85858D"
                       : authorValue.length >= 4
                       ? "#14D81C"
@@ -251,7 +384,7 @@ const AddBlogPage = () => {
                 <p
                   className={styles.authorErr}
                   style={{
-                    color: errors.Authorgeorgian
+                    color: Aerrors.Authorgeorgian
                       ? "#85858D"
                       : isGeorgianAlphabet(authorValue)
                       ? "#14D81C"
@@ -273,13 +406,15 @@ const AddBlogPage = () => {
                     border:
                       titleValue.length >= 4
                         ? "#14D81C solid 1px"
+                        : submitErros || (titleValue && !titleValue)
+                        ? "red solid 1px"
                         : "#E4E3EB solid 1px",
                   }}
                 />
                 <p
                   className={styles.authorErr}
                   style={{
-                    color: errors.TitlefourSymbol
+                    color: Terrors.TitlefourSymbol
                       ? "#85858D"
                       : titleValue.length >= 4
                       ? "#14D81C"
@@ -301,15 +436,17 @@ const AddBlogPage = () => {
                 style={{
                   resize: "none",
                   border:
-                    !errors.DescfourSymbol && descValue.length >= 4
+                    !Derrors.DescfourSymbol && descValue.length >= 4
                       ? "#14D81C solid 1px"
+                      : submitErros || (descValue && !descValue)
+                      ? "red solid 1px"
                       : "#E4E3EB solid 1px",
                 }}
               />
               <p
                 className={styles.authorErr}
                 style={{
-                  color: errors.DescfourSymbol
+                  color: Derrors.DescfourSymbol
                     ? "#85858D"
                     : descValue.length >= 4
                     ? "#14D81C"
@@ -329,9 +466,12 @@ const AddBlogPage = () => {
                   selected={dateValue}
                   onChange={handleDataChange}
                   style={{
-                    border: dateValue
-                      ? "#14D81C solid 1px"
-                      : "#E4E3EB solid 1px",
+                    border:
+                      dateValue
+                        ? "#14D81C solid 1px"
+                        : submitErros  || (dateValue && !dateValue)
+                        ? "red solid 1px"
+                        : "#E4E3EB solid 1px",
                   }}
                 />
               </div>
@@ -342,9 +482,15 @@ const AddBlogPage = () => {
                     options={data.data.map((e) => ({
                       value: e.title,
                       label: e.title,
+                      id: e.id,
+                      style: {
+                        backgroundColor: e.background_color,
+                        color: e.text_color,
+                      },
                     }))}
                     isMulti
                     name="colors"
+                    styles={customStyles}
                     className={styles.multi_select_cat}
                     classNamePrefix="select"
                     placeholder="აირჩიეთ კატეგორია"
@@ -362,14 +508,14 @@ const AddBlogPage = () => {
                   value={emailValue}
                   onChange={handleEmailChange}
                   style={{
-                    border: errors.EmailErr ? "1px solid red" : "2px solid #E4E3EB;",
+                    border: Eerrors.EmailErr ? "1px solid red" : "2px solid #E4E3EB;",
                   }}
                 />
-                {errors.EmailErr && (
+                {Eerrors.EmailErr && (
                   <div className={styles.info}>
                     {" "}
                     <img src={info_circle} alt="!" />
-                    <p className={styles.error}> {errors.EmailErr}</p>
+                    <p className={styles.error}> {Eerrors.EmailErr}</p>
                   </div>
                 )}
               </div>
@@ -382,6 +528,9 @@ const AddBlogPage = () => {
           </form>
         </div>
       </div>
+      {
+        submited  ? <Modal value={'addBlog'}  /> : " "
+      }
     </div>
   );
 };

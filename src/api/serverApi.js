@@ -8,6 +8,7 @@ const my_token = 'f536d0424e8daa23ef0abe0827aa635d5d1547d949944f73ec790695eea880
 export const API = axios.create({
     baseURL: "https://api.blog.redberryinternship.ge/api",
     headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${my_token}` 
     }
 });
@@ -32,11 +33,11 @@ export const login = async (email) => {
     }
   };
   
-export const AddBlog = async (blog) => {
-  try {
-    return (await API.post("/blogs", blog)).data
-  } catch (error) {
-    console.error("Error adding blog:", error);
-    throw error;
-  }
-}
+  export const AddBlog = async (blog) => {
+    try {
+      return (await API.post("/blogs", blog)).data;
+    } catch (error) {
+      console.error("Error adding blog:", error);
+      throw error;
+    }
+  };

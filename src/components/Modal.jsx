@@ -5,12 +5,18 @@ import info_circle from '../assets/info-circle.png'
 import { login, } from '../api/serverApi';
 import greenCheckbox from '../assets/tick-circle.png'
 import { useHeaderContext } from '../contexts/headerContexts';
+import { useNavigate } from 'react-router-dom';
 const Modal = ({ value, setOpen }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [logedIn, setLogedIn] = useState(null);
   const {setUser} = useHeaderContext()
+
+  const navigate = useNavigate()
   const closeModal = () => {
+    if(value === 'addBlog'){
+      navigate('/')
+    }
     setOpen((last) => !last);
   };
 
@@ -74,6 +80,13 @@ const Modal = ({ value, setOpen }) => {
           <p>წარმატებული ავტორიზაცია</p>
           <button onClick={closeModal}>კარგი</button>
         </div> : ''}
+        {
+          value === 'addBlog' ? <div className={styles.logedIn}>
+          <img src={greenCheckbox} alt="green check mark" />
+          <p>ჩანაწი წარმატებით დაემატა</p>
+          <button onClick={closeModal}>მთავარ გვერდზე დაბრუნება</button>
+        </div> : ''
+        }
       </div>
     </div>
   );
