@@ -27,21 +27,22 @@ const Modal = ({ value, setOpen }) => {
   const onLogin = async(e) => {
     e.preventDefault();
 
-    if(email === ''){
-      setError('შეავსეთ ველი')
-      return
-    }
-    if (!email.endsWith('@redberry.ge')) {
-      setError('მეილი უნდა მთავრდებოდეს @redberry.ge–ით');
-      return
-    }
-    try {
-      const data = await login(email);
-      setUser(true);
-      setLogedIn(data+ 'true')      
-    } catch (error) {
-      setError('ელ–ფოსტა არ მოიძებნა');
-    }
+      if(email === ''){
+        setError('შეავსეთ ველი')
+        return
+      }
+      if (!email.endsWith('@redberry.ge')) {
+        setError('მეილი უნდა მთავრდებოდეს @redberry.ge–ით');
+        return
+      }
+      try {
+        const data = await login(email);
+        setUser(true);
+        setLogedIn(data+ 'true')      
+      } catch (error) {
+        setError('ელ–ფოსტა არ მოიძებნა');
+      }
+      
     
     
   };
@@ -76,7 +77,9 @@ const Modal = ({ value, setOpen }) => {
         )}
         {logedIn ? 
         <div className={styles.logedIn}>
-          <img src={greenCheckbox} alt="green check mark" />
+          <div className={styles.greenCheck}>
+            <img src={greenCheckbox} alt="green check mark" />
+          </div>
           <p>წარმატებული ავტორიზაცია</p>
           <button onClick={closeModal}>კარგი</button>
         </div> : ''}

@@ -8,7 +8,7 @@ const my_token = 'f536d0424e8daa23ef0abe0827aa635d5d1547d949944f73ec790695eea880
 export const API = axios.create({
     baseURL: "https://api.blog.redberryinternship.ge/api",
     headers: {
-        'Content-Type': 'application/json',
+      "Content-Type": "multipart/form-data",
         'Authorization': `Bearer ${my_token}` 
     }
 });
@@ -41,3 +41,12 @@ export const login = async (email) => {
       throw error;
     }
   };
+
+  export const GetBlogs = async () => {
+    try {
+      return (await API.get('/blogs')).data;
+    } catch (error) {
+      console.error("Error getting blog:", error);
+      throw error;
+    }
+  }

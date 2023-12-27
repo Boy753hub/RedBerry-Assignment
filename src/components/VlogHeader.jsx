@@ -11,7 +11,7 @@ const VlogHeader = () => {
 	};
   return (
     <div className={styles.Header}>
-      <div>
+      <div style={{margin: 'auto'}}>
         <div className={styles.logo}>
           <img src={logo} alt="here was logo" onClick={onLogoClick} />
         </div>

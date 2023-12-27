@@ -37,6 +37,7 @@
     margin-right: 20px;
 }
 .scrollContainer{
+    margin: 0 auto;
     overflow-x: auto;
     white-space: nowrap;
     padding-top: 1rem;
@@ -57,4 +58,18 @@
     gap: 1.5rem;      
     flex: 0 0 auto;
     scroll-snap-align: start;
+}
+.blogsContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+}
+.blogs{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 2rem;
+    column-gap: 4rem;
 }

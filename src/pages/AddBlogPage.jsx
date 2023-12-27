@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "../styles/AddBlog.module.css";
 import goBack from "../assets/Arrow.png";
 import folderAdd from "../assets/folder-add.png";
@@ -11,6 +11,9 @@ import Select from "react-select";
 import info_circle from "../assets/info-circle.png";
 import Modal from "../components/Modal";
 import { debounce } from 'lodash';
+import { useForm, useFormContext, SubmitHandler } from 'react-hook-form';
+import BlogAddedModal from "../components/BlogAddedModal";
+
 
 
 const AddBlogPage = () => {
@@ -28,9 +31,12 @@ const AddBlogPage = () => {
   const [Eerrors, EsetErrors] = useState({});
   const [submited, setSubmited] = useState(false)
   const [submitErros, setSubmitErros] = useState(false)
+  const [use, setuse] =useState(null)
+  const {register, handleSubmit} = useForm()
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
-  const fileInputRef = React.createRef();
+  const fileInputRef = useRef(null);
+  
   const {  data } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
@@ -99,8 +105,10 @@ const AddBlogPage = () => {
     navigate("/");
   };
 
+  
+
   const onSubmit = async(event) => {
-    event.preventDefault();
+    // event.preventDefault();
    
       let newErrors = {};
       if(emailValue){
@@ -113,12 +121,7 @@ const AddBlogPage = () => {
     
     if(file && authorValue && dateValue && titleValue && descValue && categoriesValue ){
       console.log('submited')
-      const data = JSON.stringify({...file})
-      console.log(data)
       
-
-
-      console.log(categoriesValue.toString())
       const formData = new FormData()
       formData.append('image', file)
       formData.append('title', titleValue)
@@ -131,10 +134,15 @@ const AddBlogPage = () => {
       try {
         setSubmitErros(false)
         const res =  await AddBlog(formData)
-        if(res.success){
-          setSubmited(true)
-          sessionStorage.clear()
-        }
+        setSubmited(true)
+        sessionStorage.clear()
+        setFile(null)
+        setTitleValue('')
+        setDescValue('')
+        setAuthorValue('')
+        setDateValue('')
+        setTitleValue('')
+        setSetCategoriesValue('')
         console.log(res);
       } catch (error) {
         console.error(error);
@@ -215,6 +223,7 @@ const AddBlogPage = () => {
   };
 
   const handleUploadClick = () => {
+    console.log('Upload clicked');
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -289,7 +298,7 @@ const AddBlogPage = () => {
           onDrop={handleDrop}
           onDragOver={(event) => event.preventDefault()}
         >
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <h1>ბლოგის დამატება</h1>
             <div className={styles.photoUpload}>
               <p>ატვირთეთ ფოტო *</p>
@@ -312,11 +321,12 @@ const AddBlogPage = () => {
                     </p>
                   </div>
                   <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileInputChange}
-                    style={{ display: "none" }}
-                    ref={fileInputRef}
+                   type="file"
+                   accept="image/*"
+                   onChange={handleFileInputChange}
+                   style={{ display: 'none' }}
+                   ref={fileInputRef}
+                  //  {...register('image')}
                   />
                 </div>
               ) : (
@@ -529,7 +539,7 @@ const AddBlogPage = () => {
         </div>
       </div>
       {
-        submited  ? <Modal value={'addBlog'}  /> : " "
+        submited  ? <BlogAddedModal/>: " "
       }
     </div>
   );

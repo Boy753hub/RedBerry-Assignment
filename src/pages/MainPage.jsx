@@ -1,21 +1,44 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/MainPage.module.css';
 import spaceLogo from '../assets/space_background.png';
 import { useQuery } from '@tanstack/react-query';
 import { getCategories } from '../api/serverApi';
 import Categories from '../components/Categories';
 import Spinner from 'react-bootstrap/Spinner';
+import { useHeaderContext } from '../contexts/headerContexts';
+import Blog from '../components/Blog';
 
 const MainPage = () => {
   const { isLoading, error, data } = useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
   });
-
+  const { isLoading: loadblog, error: errblog, data: blogData } = useHeaderContext()
   const scrollContainerRef = useRef(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [startX, setStartX] = useState(null);
   const [scrollLeft, setScrollLeft] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategories((prevCategories) => {
+      if (prevCategories.includes(categoryId)) {
+        return prevCategories.filter((id) => id !== categoryId);
+      } else {
+        return [...prevCategories, categoryId];
+      }
+    });
+    console.log(selectedCategories);
+  };
+
+  const filteredBlogs = selectedCategories.length
+  ? blogData?.data?.filter((blog) =>
+      blog.categories.some((category) =>
+        selectedCategories.includes(category.id)
+      )
+    )
+  : blogData?.data;
 
   const handleMouseDown = (e) => {
     setIsMouseDown(true);
@@ -67,11 +90,30 @@ const MainPage = () => {
               title={category.title}
               text_color={category.text_color}
               background_color={category.background_color}
+              handleCategoryClick={handleCategoryClick}
+              id={category.id}
+              adress={'main'}
             />
           ))}
         </div>
       </div>
+      <div className={styles.blogsContainer}>
 
+          <div className={styles.blogs}>
+            { filteredBlogs ? filteredBlogs.map((data) => 
+              <Blog
+              key={data.id}
+              title={data.title}
+              email={data.email} 
+              image={data.image} 
+              desc={data.description} 
+              author={data.author} 
+              date={data.publish_date} 
+              categories={data.categories} 
+              />
+              ) : <div></div>}
+          </div>
+        </div>
     </div>
   );
 };
