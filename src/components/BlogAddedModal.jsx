@@ -3,11 +3,14 @@ import styles from '../styles/Modal.module.css'
 import x from '../assets/X.png'
 import greenCheckbox from '../assets/tick-circle.png'
 import { useNavigate } from 'react-router-dom'
+import { useHeaderContext } from '../contexts/headerContexts'
 
 const BlogAddedModal = () => {
     const navigate = useNavigate()
+    const { refetch } = useHeaderContext()
 
     const closeModal = () => {
+        refetch()
         navigate('/')
         
       };

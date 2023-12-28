@@ -7,6 +7,7 @@ const VlogHeader = () => {
   const navigate = useNavigate()
 
   const onLogoClick = () => {
+    
 		navigate("/");
 	};
   return (

@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import MainPage from "../pages/MainPage";
 import AddBlogPage from "../pages/AddBlogPage";
 import VlogHeader from "../components/VlogHeader";
+import BlogPage from "../pages/BlogPage";
 
 export const router = createHashRouter([
     {
@@ -17,6 +18,10 @@ export const router = createHashRouter([
             {
                 index: true,
                 element: <MainPage />,
+            },
+            {
+                path: "/blog/:id",
+                element: <BlogPage />,
             }
         ]
     },

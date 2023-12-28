@@ -50,3 +50,12 @@ export const login = async (email) => {
       throw error;
     }
   }
+
+  export const GetBlogsById = async (id) => {
+    try {
+      return (await API.get(`/blogs/${id}`)).data;
+    } catch (error) {
+      console.error("Error getting blog:", error);
+      throw error;
+    }
+  }

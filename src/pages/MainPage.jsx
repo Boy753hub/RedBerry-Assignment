@@ -19,7 +19,9 @@ const MainPage = () => {
   const [startX, setStartX] = useState(null);
   const [scrollLeft, setScrollLeft] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
-
+  const currentDate = new Date();
+  const formattedCurrentDate = currentDate.toLocaleDateString('en-GB'); 
+  
   
   const handleCategoryClick = (categoryId) => {
     setSelectedCategories((prevCategories) => {
@@ -30,15 +32,21 @@ const MainPage = () => {
       }
     });
     console.log(selectedCategories);
+  };  
+
+  const isDateInFuture = (publishDate) => {
+    const blogDate = new Date(publishDate.split('.').reverse().join('-'));
+    return blogDate > currentDate;
   };
 
   const filteredBlogs = selectedCategories.length
   ? blogData?.data?.filter((blog) =>
       blog.categories.some((category) =>
         selectedCategories.includes(category.id)
-      )
+      ) && !isDateInFuture(blog.publish_date)
     )
-  : blogData?.data;
+  : blogData?.data?.filter((blog) => !isDateInFuture(blog.publish_date));
+  
 
   const handleMouseDown = (e) => {
     setIsMouseDown(true);
@@ -100,18 +108,19 @@ const MainPage = () => {
       <div className={styles.blogsContainer}>
 
           <div className={styles.blogs}>
-            { filteredBlogs ? filteredBlogs.map((data) => 
-              <Blog
+          {filteredBlogs?.map((data) => (
+            <Blog
               key={data.id}
               title={data.title}
-              email={data.email} 
-              image={data.image} 
-              desc={data.description} 
-              author={data.author} 
-              date={data.publish_date} 
-              categories={data.categories} 
-              />
-              ) : <div></div>}
+              email={data.email}
+              image={data.image}
+              desc={data.description}
+              author={data.author}
+              date={data.publish_date}
+              categories={data.categories}
+              id={data.id}
+            />
+          ))}
           </div>
         </div>
     </div>

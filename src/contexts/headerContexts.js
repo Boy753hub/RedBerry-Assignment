@@ -7,7 +7,7 @@ const HeaderContexts = createContext(null)
 
 const HeaderContextProvider = ({children}) => {
     const [isUser = true, setUser] = useSessionStorage("user", false);
-    const { isLoading, error, data } = useQuery({
+    const { isLoading, error, data , refetch} = useQuery({
         queryKey: ['Blogs'],
         queryFn: GetBlogs,
       });
@@ -17,8 +17,9 @@ const HeaderContextProvider = ({children}) => {
         setUser,
         isLoading,
         error,
-        data
-    }), [isUser,setUser, isLoading, error, data]);
+        data,
+        refetch
+    }), [isUser,setUser, isLoading, error, data, refetch]);
     
     return(
         <HeaderContexts.Provider value={contextValue}>

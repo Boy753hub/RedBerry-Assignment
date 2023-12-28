@@ -2,12 +2,18 @@ import React, { useRef, useState } from 'react'
 import styles from "../styles/Blog.module.css"
 import smallArrow from '../assets/smallArrow.png'
 import Categories from './Categories'
+import { useNavigate } from 'react-router-dom'
 
-const Blog = ({title,email, image, desc, author, date, categories, }) => {
+const Blog = ({title,email, image, desc, author, date, categories, id}) => {
     const scrollContainerRef = useRef(null);
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [startX, setStartX] = useState(null);
     const [scrollLeft, setScrollLeft] = useState(null);
+    const navigate = useNavigate()
+
+    const onLinkClick = () => {
+        navigate("/blog/"+id);
+    }
 
     const handleMouseDown = (e) => {
         setIsMouseDown(true);
@@ -71,7 +77,7 @@ const Blog = ({title,email, image, desc, author, date, categories, }) => {
         <div className={styles.desc}>
             <p>{desc}</p>
         </div>
-        <div className={styles.link}>
+        <div className={styles.link} onClick={onLinkClick}>
             <p>სრულად ნახვა</p> <img src={smallArrow} alt="" />
         </div>
     </div>

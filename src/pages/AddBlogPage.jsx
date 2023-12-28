@@ -135,7 +135,9 @@ const AddBlogPage = () => {
         setSubmitErros(false)
         const res =  await AddBlog(formData)
         setSubmited(true)
-        sessionStorage.clear()
+        sessionStorageKeys.forEach((key) => {
+          sessionStorage.removeItem(key);
+        });
         setFile(null)
         setTitleValue('')
         setDescValue('')
