@@ -51,10 +51,8 @@ const AddBlogPage = () => {
       const storedValue = sessionStorage.getItem(key);
 
       if (storedValue) {
-        // Parse the stored JSON value and update the corresponding state
         const parsedValue = JSON.parse(storedValue);
 
-        // Update state based on the key
         switch (key) {
           case 'authorValue':
             setAuthorValue(parsedValue);
@@ -125,7 +123,6 @@ const AddBlogPage = () => {
       formData.append('publish_date', dateValue)
       formData.append('categories', JSON.stringify(categoriesValue))
       formData.append('email', emailValue ? emailValue : '')
-      console.log(formData)
       try {
         setSubmitErros(false)
         const res =  await AddBlog(formData)
