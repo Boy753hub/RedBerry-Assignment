@@ -77,9 +77,9 @@ const Blog = ({title,email, image, desc, author, date, categories, id}) => {
         <div className={styles.desc}>
             <p>{desc}</p>
         </div>
-        <div className={styles.link} onClick={onLinkClick}>
-            <p>სრულად ნახვა</p> <img src={smallArrow} alt="" />
-        </div>
+        <a className={styles.link} onClick={onLinkClick}>
+        <p>სრულად ნახვა</p> <img src={smallArrow} alt="" />
+      </a>
     </div>
   )
 }

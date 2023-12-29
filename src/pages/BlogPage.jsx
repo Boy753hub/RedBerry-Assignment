@@ -8,27 +8,47 @@ import Categories from '../components/Categories';
 import { Carousel } from 'bootstrap';
 import Blog from '../components/Blog';
 import { useHeaderContext } from '../contexts/headerContexts';
+import AliceCarousel from 'react-alice-carousel';
+import 'react-alice-carousel/lib/alice-carousel.css';
+
+
 
 const BlogPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate()
-  const { isLoading, error, data, refetch} = useQuery({
+  const navigate = useNavigate();
+  const { isLoading, error, data, refetch } = useQuery({
     queryKey: ['BlogById'],
     queryFn: () => GetBlogsById(id),
   });
-  const { isLoading: loadblog, error: errblog, data: blogData } = useHeaderContext()
+  const { isLoading: loadblog, error: errblog, data: blogData } = useHeaderContext();
   const scrollContainerRef = useRef(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [startX, setStartX] = useState(null);
   const [scrollLeft, setScrollLeft] = useState(null);
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
+  const currentBlogId = Number(id);
 
+  useEffect(() => {
+    refetch();
+  }, [id, refetch]);
+  useEffect(() => {
+    if (!isLoading && data && blogData) {
+      const filtered = blogData.data?.filter((blog) => {
+        const blogCategoryIds = blog.categories?.map((category) => category.id);
+        const selectedCategoryIds = data.categories?.map((category) => category.id);
   
+        const hasMatchingCategory = selectedCategoryIds?.some((categoryId) =>
+          blogCategoryIds?.includes(categoryId)
+        );
+  
+        const isNotCurrentBlog = blog.id !== currentBlogId;
+  
+        return hasMatchingCategory && isNotCurrentBlog;
+      }) || [];
+      setFilteredBlogs(filtered);
+    }
+  }, [isLoading, data, blogData, currentBlogId, id]);
 
-  const filteredBlogs = blogData?.data?.filter((blog) =>
-  blog.categories?.some((category) =>
-    data.categories.some((selectedCategoryId) => selectedCategoryId === category.id)
-  )
-) || [];
   const handleMouseDown = (e) => {
     setIsMouseDown(true);
     setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
@@ -51,20 +71,18 @@ const BlogPage = () => {
     scrollContainerRef.current.scrollLeft = scrollLeft - walk;
   };
 
-
-
   const goBackF = () => {
     navigate("/");
   };
 
-  if(isLoading) {
-    return <div>loading...</div>
+  if (isLoading || loadblog) {
+    return <div>loading...</div>;
   }
-  if(error) {
-    return <div><p>{error}</p></div>
+
+  if (error || errblog) {
+    return <div><p>{error || errblog}</p></div>;
   }
-  if (data){ console.log(data); }
-  if (blogData){ console.log(blogData); }
+
   return (
     <div className={styles.BlogPage}>
       <div className={styles.backButton}>
@@ -85,61 +103,77 @@ const BlogPage = () => {
           <h1>{data.title}</h1>
         </div>
         <div className={styles.categories}>
-            <div
+          <div
             className={styles.scrollContainer}
             ref={scrollContainerRef}
             onMouseDown={handleMouseDown}
             onMouseLeave={handleMouseLeave}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
-        >
+          >
             <div className={styles.categories}>
-            {data.categories.map((category) => (
+              {data.categories.map((category) => (
                 <Categories
-                key={category.id}
-                title={category.title}
-                text_color={category.text_color}
-                background_color={category.background_color}
+                  key={category.id}
+                  title={category.title}
+                  text_color={category.text_color}
+                  background_color={category.background_color}
                 />
-            ))}
+              ))}
             </div>
-           </div>
+          </div>
         </div>
         <div className={styles.desc}>
           <p>{data.description}</p>
         </div>
       </div>
-      {data && <div className={styles.Carousel}>
+      {data && (
+        <div className={styles.Carousel}>
         <div className={styles.options}>
-              <h1>მსგავსი სტატიები</h1>
-              <div className={styles.buttons}>
-                <div className={styles.left}><h1>{'<'}</h1></div>
-                <div className={styles.right}><h1>{'>'}</h1></div>
-              </div>
+          <h1>მსგავსი სტატიები</h1>
+          <div className={styles.buttons}>
+            
+           
+          </div>
         </div>
         <div className={styles.carouselItems}>
-        <div className={styles.blogsContainer}>
-          <div className={styles.blogs}>
-          {filteredBlogs?.map((data) => (
-            <Blog
-              key={data.id}
-              title={data.title}
-              email={data.email}
-              image={data.image}
-              desc={data.description}
-              author={data.author}
-              date={data.publish_date}
-              categories={data.categories}
-              id={data.id}
-            />
-          ))}
-          </div>
-          </div>
+          <AliceCarousel
+            items={filteredBlogs?.map((data) => (
+              <Blog
+                key={data.id}
+                title={data.title}
+                email={data.email}
+                image={data.image}
+                desc={data.description}
+                author={data.author}
+                date={data.publish_date}
+                categories={data.categories}
+                id={data.id}
+              />
+            ))}
+            responsive={{ 0: { items: 1 }, 600: { items: 3 }, 1024: { items: 4 } }}
+            mouseTracking={false}
+            styles={{paddingTop: '10px'}}
+            renderPrevButton={({ isDisabled }) => (
+              <div
+                className={`${styles.left} ${isDisabled ? styles.disabled : ''}`}
+              >
+                <h1>{'<'}</h1>
+              </div>
+            )}
+            renderNextButton={({ isDisabled }) => (
+              <div
+                className={`${styles.right} ${isDisabled ? styles.disabled : ''}`}
+              >
+                <h1>{'>'}</h1>
+              </div>
+            )}
+          />
         </div>
-
-      </div>}
+      </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default BlogPage
+export default BlogPage;

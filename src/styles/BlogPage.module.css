@@ -90,24 +90,57 @@
   justify-content: space-between;
   margin: 2rem;
 }
+
 .buttons {
   display: flex;
+  align-items: center;
 }
-.buttons h1 {
-    font-size:larger
-}
+
 .left,
 .right {
   background-color: #e4e3eb;
-  border-radius: 50%; 
+  border-radius: 50%;
   width: 44px;
   height: 44px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: larger;
-  cursor: pointer; 
-  margin: 0 10px; 
+  cursor: pointer;
   color: white;
+  margin: 0.5rem;
 }
 
+.carouselItems {
+  display: flex;
+  flex-direction: row;
+  width: 100%; 
+  overflow: hidden;
+  position: relative;
+}
+
+.Carousel {
+  margin-top: 5rem;
+  position: relative;
+  width: calc(100% - 4rem); 
+  margin-left: 2rem; 
+}
+
+.left,
+.right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.left {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+.left:hover,
+.right:hover {
+  background-color: #5D37F3;
+}
