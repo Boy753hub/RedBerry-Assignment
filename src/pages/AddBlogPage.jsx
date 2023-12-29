@@ -268,7 +268,6 @@ const AddBlogPage = () => {
   };
 
   const selectAnswer = (e) => {
-    const value = e.value;
     const selectedStrings = e.map((option) => option.id);
     setSetCategoriesValue(selectedStrings);
   };
