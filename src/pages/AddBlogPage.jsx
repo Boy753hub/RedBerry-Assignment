@@ -9,9 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import { AddBlog, getCategories } from "../api/serverApi";
 import Select from "react-select";
 import info_circle from "../assets/info-circle.png";
-import Modal from "../components/Modal";
 import { debounce } from 'lodash';
-import { useForm, useFormContext, SubmitHandler } from 'react-hook-form';
+import { useForm} from 'react-hook-form';
 import BlogAddedModal from "../components/BlogAddedModal";
 
 
@@ -26,13 +25,10 @@ const AddBlogPage = () => {
   const [Aerrors, AsetErrors] = useState({});
   const [Terrors, TsetErrors] = useState({});
   const [Derrors, DsetErrors] = useState({});
-  const [Dateerrors, DatesetErrors] = useState({});
-  const [Cerrors, CsetErrors] = useState({});
   const [Eerrors, EsetErrors] = useState({});
   const [submited, setSubmited] = useState(false)
   const [submitErros, setSubmitErros] = useState(false)
-  const [use, setuse] =useState(null)
-  const {register, handleSubmit} = useForm()
+  const { handleSubmit} = useForm()
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -120,7 +116,6 @@ const AddBlogPage = () => {
     }
     
     if(file && authorValue && dateValue && titleValue && descValue && categoriesValue ){
-      console.log('submited')
       
       const formData = new FormData()
       formData.append('image', file)
@@ -145,7 +140,6 @@ const AddBlogPage = () => {
         setDateValue('')
         setTitleValue('')
         setSetCategoriesValue('')
-        console.log(res);
       } catch (error) {
         console.error(error);
       }

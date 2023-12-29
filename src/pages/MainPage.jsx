@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {  useRef, useState } from 'react';
 import styles from '../styles/MainPage.module.css';
 import spaceLogo from '../assets/space_background.png';
 import { useQuery } from '@tanstack/react-query';
@@ -13,7 +13,7 @@ const MainPage = () => {
     queryKey: ['categories'],
     queryFn: getCategories,
   });
-  const { isLoading: loadblog, error: errblog, data: blogData } = useHeaderContext()
+  const {  data: blogData } = useHeaderContext()
   const scrollContainerRef = useRef(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [startX, setStartX] = useState(null);
@@ -31,7 +31,6 @@ const MainPage = () => {
         return [...prevCategories, categoryId];
       }
     });
-    console.log(selectedCategories);
   };  
 
   const isDateInFuture = (publishDate) => {

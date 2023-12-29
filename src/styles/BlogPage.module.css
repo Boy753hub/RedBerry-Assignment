@@ -84,6 +84,12 @@
 .desc {
   margin-top: 2rem;
   color: #404049;
+  width: 100%;
+}
+
+.desc p {
+  max-width: 720px;
+  overflow-wrap: break-word;
 }
 .options {
   display: flex;

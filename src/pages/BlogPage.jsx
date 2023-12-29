@@ -5,7 +5,6 @@ import { GetBlogsById } from '../api/serverApi';
 import styles from '../styles/BlogPage.module.css'
 import goBack from '../assets/Arrow.png'
 import Categories from '../components/Categories';
-import { Carousel } from 'bootstrap';
 import Blog from '../components/Blog';
 import { useHeaderContext } from '../contexts/headerContexts';
 import AliceCarousel from 'react-alice-carousel';
